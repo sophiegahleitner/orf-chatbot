@@ -12,8 +12,6 @@ server.use(bodyParser.urlencoded({
 }));
 server.use(bodyParser.json());
 
-
-
 server.get('/', (req, res) => res.send('page'));
 server.post('/orf-data', (request, response) => {
     const agent = new WebhookClient({ request, response });
@@ -28,14 +26,14 @@ server.post('/orf-data', (request, response) => {
         agent.add(`I didn't understand`);
         agent.add(`I'm sorry, can you try again?`);
     }
+    function sendAthleteAge(agent) {
+      agent.add(`Marcel Hirscher ist 20 Jahre alt.`);
+    }
 
     let intentMap = new Map();
     intentMap.set('Default Welcome Intent', welcome);
     intentMap.set('Default Fallback Intent', fallback);
-    // intentMap.set('your intent name here', yourFunctionHandler);
-    // intentMap.set('your intent name here', googleAssistantHandler);
+    intentMap.set('ORF.athlete.age', sendAthleteAge);
     agent.handleRequest(intentMap);
 });
-
-
 server.listen(PORT, () => console.log(`Listening on ${ PORT }`));
