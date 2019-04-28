@@ -27,7 +27,7 @@ server.post('/orf-data', (request, response) => {
         agent.add(`I'm sorry, can you try again?`);
     }
     function sendAthleteAge(agent) {
-      agent.add(`Marcel Hirscher ist 20 Jahre alt.`);
+      agent.add(agent.parameters.athletename +` ist 20 Jahre alt.`);
     }
 
     let intentMap = new Map();
