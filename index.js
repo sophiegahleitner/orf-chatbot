@@ -5,6 +5,12 @@ const server = express();
 server.use(express.static(path.join(__dirname, 'public')));
 
 server.get('/', (req, res) => res.send('page'));
+server.get('/orf-data', (req, res) => res.json({
+    speech: "das ist ein test",
+    displayText: "das ist ein test",
+    source: 'get-movie-details'
+}));
+
 
 
 server.listen(PORT, () => console.log(`Listening on ${ PORT }`));
