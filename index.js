@@ -6,9 +6,9 @@ server.use(express.static(path.join(__dirname, 'public')));
 
 server.get('/', (req, res) => res.send('page'));
 server.post('/orf-data', (req, res) => res.json({
-    speech: "das ist ein test",
-    displayText: "das ist ein test",
-    source: 'get-movie-details'
+    "speech": "das ist ein test",
+    "displayText": "das ist ein test",
+    "source": 'get-movie-details'
 }));
 
 
