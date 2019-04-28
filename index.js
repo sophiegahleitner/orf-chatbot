@@ -9,9 +9,9 @@ server.use(express.static(path.join(__dirname, 'public')));
 
 server.get('/', (req, res) => res.send('page'));
 server.post('/orf-data', (req, res) => {
-    const agent = new WebhookClient({ request, response });
-console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
-console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
+    const agent = new WebhookClient({ req, res });
+console.log('Dialogflow Request headers: ' + JSON.stringify(req.headers));
+console.log('Dialogflow Request body: ' + JSON.stringify(req.body));
 
 function welcome(agent) {
     agent.add(`Willkommen zum ORF Chatbot!`);
