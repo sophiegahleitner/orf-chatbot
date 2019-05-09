@@ -11,10 +11,9 @@ export function agent(request, response){
 
     function welcome(agent) {
         agent.add(`Willkommen zum ORF Bot!`);
-
     }
 
-    function fallback(agent) {
+    function fallback(agent){
         agent.add(`I didn't understand`);
         agent.add(`I'm sorry, can you try again?`);
     }
@@ -28,5 +27,4 @@ export function agent(request, response){
     intentMap.set('ORF.athlete.age', sendAthleteAge);
     agent.handleRequest(intentMap);
     return agent;
-
 }
