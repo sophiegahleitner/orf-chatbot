@@ -15,9 +15,9 @@ server.use(bodyParser.urlencoded({
 server.use(bodyParser.json());
 
 server.get('/', (req, res) => {
-    let frontend = '<iframe allow="microphone;" width="350" height="430" src="https://console.dialogflow.com/api-client/demo/embedded/d069c269-2570-4139-a93a-7b10375048d7">  </iframe>';
-    res.send(frontend);
-    // res.send(frontend());
+    // let frontend = '<iframe allow="microphone;" width="350" height="430" src="https://console.dialogflow.com/api-client/demo/embedded/d069c269-2570-4139-a93a-7b10375048d7">  </iframe>';
+    // res.send(frontend);
+    res.send(frontend());
 });
 server.post('/orf-data', (request, response) => agent(request, response));
 
