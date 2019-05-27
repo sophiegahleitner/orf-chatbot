@@ -1,5 +1,7 @@
 const {WebhookClient} = require('dialogflow-fulfillment');
-const {Card, Suggestion} = require('dialogflow-fulfillment');
+// const {Card, Suggestion} = require('dialogflow-fulfillment');
+import * as staticdata from '../intenthandling/staticdata';
+
 
 export function test(){
     console.log("test");
@@ -17,8 +19,16 @@ export function agent(request, response){
         agent.add(`I didn't understand`);
         agent.add(`I'm sorry, can you try again?`);
     }
-    function sendAthleteAge(agent) {
-        agent.add(agent.parameters.athletename +` ist 20 Jahre alt.`);
+
+    function sendAthleteAge (agent) {
+        let id = 4623;
+        return staticdata.getPersonData(id).then(resp => {
+                agent.add(agent.parameters.athletename +` ist ${resp.data.Age} Jahre alt.`);
+            })
+            .catch(res => {
+                agent.add(res);
+
+            });
     }
 
     let intentMap = new Map();
@@ -28,3 +38,4 @@ export function agent(request, response){
     agent.handleRequest(intentMap);
     return agent;
 }
+
