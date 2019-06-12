@@ -6,6 +6,7 @@ import * as staticdata from '../intenthandling/staticdata';
 export function test(){
     console.log("test");
 }
+
 export function agent(request, response){
     const agent = new WebhookClient({ request, response });
     console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
@@ -16,18 +17,18 @@ export function agent(request, response){
     }
 
     function fallback(agent){
-        agent.add(`I didn't understand`);
-        agent.add(`I'm sorry, can you try again?`);
+        agent.add(`Ich kann das nicht verstehen.`);
+        agent.add(`Kannst du das bitte wiederholen?`);
     }
 
-    function sendAthleteAge (agent) {
-        let id = 4623;
-        return staticdata.getPersonData(id).then(resp => {
-                agent.add(agent.parameters.athletename +` ist ${resp.data.Age} Jahre alt.`);
-            })
+    function sendAthleteAge (agent, ) {
+        return staticdata.getPersonData(agent.parameters.athletename )
+            .then(resp => {
+            agent.add(agent.parameters.athletename +` ist ${resp.data.Age} Jahre alt.`);
+        })
             .catch(res => {
-                agent.add(res);
-
+                console.log("Agent:"+ res);
+                agent.add("Es ist folgender Fehler aufgetreten: "+res);
             });
     }
 
