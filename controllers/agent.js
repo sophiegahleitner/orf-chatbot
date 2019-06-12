@@ -21,7 +21,7 @@ export function agent(request, response){
         agent.add(`Kannst du das bitte wiederholen?`);
     }
 
-    function sendAthleteAge (agent, ) {
+    function sendAthleteAge (agent) {
         return staticdata.getPersonData(agent.parameters.athletename )
             .then(resp => {
             agent.add(agent.parameters.athletename +` ist ${resp.data.Age} Jahre alt.`);
