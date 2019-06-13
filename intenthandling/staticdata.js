@@ -60,7 +60,7 @@ function getIdByName(name) {
             // if (err) reject(err);
             con.query(sql, function (err, result) {
                 if (err) return reject(err);
-                if(err || result[0] == null|| result[0].orf_id||result[0]===undefined){
+                if(err || result[0] == null|| result[0].orf_id ===undefined||result[0]===undefined){
                     reject("Person wurde nicht gefunden.");
                 }
                 else{

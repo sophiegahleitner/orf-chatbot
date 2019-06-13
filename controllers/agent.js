@@ -21,11 +21,22 @@ export function agent(request, response){
         agent.add(`Kannst du das bitte wiederholen?`);
     }
 
-    function sendAthleteAge (agent) {
+    function sendAthleteAge (agent, type) {
         return staticdata.getPersonData(agent.parameters.athletename )
             .then(resp => {
-            agent.add(agent.parameters.athletename +` ist ${resp.data.Age} Jahre alt.`);
+            agent.add(agent.parameters.athletename +` ist ${resp.data.age} Jahre alt.`);
         })
+            .catch(res => {
+                console.log("Agent:"+ res);
+                agent.add("Es ist folgender Fehler aufgetreten: "+res);
+            });
+    }
+
+    function sendAthleteHeight (agent, type) {
+        return staticdata.getPersonData(agent.parameters.athletename )
+            .then(resp => {
+                agent.add(agent.parameters.athletename +` ist ${resp.data.Height} Zentimeter groß.`);
+            })
             .catch(res => {
                 console.log("Agent:"+ res);
                 agent.add("Es ist folgender Fehler aufgetreten: "+res);
@@ -36,6 +47,7 @@ export function agent(request, response){
     intentMap.set('Default Welcome Intent', welcome);
     intentMap.set('Default Fallback Intent', fallback);
     intentMap.set('ORF.athlete.age', sendAthleteAge);
+    intentMap.set('ORF.athlete.height', sendAthleteHeight);
     agent.handleRequest(intentMap);
     return agent;
 }
