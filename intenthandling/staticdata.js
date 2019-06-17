@@ -10,7 +10,8 @@ const dbname = 'heroku_384ac690adcffdc';
 
 
 export function getPersonData(name) {
-    return getIdByName(name).then((id) => {
+    return getIdByName(name)
+        .then((id) => {
             return new Promise((resolve, reject) => {
                 axios.get(url + '/person/' + id)
                     .then(resp => {console.log("resp");resolve(resp)})
@@ -18,7 +19,6 @@ export function getPersonData(name) {
             })
         })
         .catch(err => {
-            console.log("in catch");
             return new Promise((resolve, reject) => {
                 if(err ==="Person wurde nicht gefunden.") {
                     reject(err);
@@ -44,6 +44,7 @@ export function getRecordWinner(compId, discId, genId, locId, number = 5) {
 function getIdByName(name) {
     return new Promise(function (resolve, reject){
         console.log("Type:" + typeof (name) + ' Name: ' + name);
+        name = name.toLowerCase();
         let nameArray = name.match(/\S+/g);
         console.log(nameArray[0]);
 

@@ -18,48 +18,39 @@ export function runCRON() {
     });
 }
 
-export function updatePersonIds(){
+export function updatePersonIds() {
     axios.get(`${url}/person`).then(resp => {
-
-        let sql = `INSERT INTO persons(firstname, lastname, orf_id)
-           VALUES`;
+        let sql = `INSERT INTO persons(firstname, lastname, orf_id) VALUES`;
         getLastID('persons')
-            .then((result)=>{
+            .then((result) => {
                 let updated = false;
                 resp.data.forEach(function (item, key) {
-                    if(!(item.PersonId <= result)) {
-                        // console.log("res"+result.LastID );
-                        sql += ` ("${clearstring(item.FirstName)}", "${clearstring(item.LastName)}", ${clearstring(item.PersonId)}),`
+                    if (!(item.PersonId <= result)) {
+                        sql += ` ("${clearstring(item.FirstName.toLowerCase())}", "${clearstring(item.LastName.toLowerCase())}", ${clearstring(item.PersonId)}),`
                         updated = true;
                     }
                 });
-
-
                 sql = sql.slice(0, -1);
-                if(updated)execSQL(sql);
-        })
-            .catch((err)=>{
-            console.log(err);
+                if (updated){
+                    execSQL(sql);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
             });
-
-
-
     });
-    // getAllPersons();
 }
-function clearstring(str){
-    if(typeof (str)==="string") {
-        let cleanstr =  str.replace(/['"]+/g, '');
+
+function clearstring(str) {
+    if (typeof (str) === "string") {
+        let cleanstr = str.replace(/['"]+/g, '');
         return cleanstr;
     }
     else
         return str;
-
 }
 
-
-
-function execSQL(sql){
+function execSQL(sql) {
     let con = mysql.createConnection({
         host: dburl,
         user: dbusername,
@@ -67,7 +58,7 @@ function execSQL(sql){
         database: dbname
     });
 
-    con.connect(function(err) {
+    con.connect(function (err) {
         if (err) throw err;
         console.log("Connected!");
     });
@@ -79,9 +70,9 @@ function execSQL(sql){
     console.log("conn closed");
 }
 
-function getLastID(tablename){
+function getLastID(tablename) {
 
-    return new Promise(function(resolve, reject){
+    let getID = new Promise(function (resolve, reject) {
         let sql = `SELECT MAX(orf_id) AS LastID FROM ${tablename}`;
 
         let con = mysql.createConnection({
@@ -90,7 +81,7 @@ function getLastID(tablename){
             password: dbpw,
             database: dbname
         });
-        con.connect(function(err) {
+        con.connect(function (err) {
             if (err) reject(err);
             con.query(sql, function (err, result) {
                 if (err) return reject(err);
@@ -100,5 +91,6 @@ function getLastID(tablename){
 
         });
     });
+    return getID;
 
 }

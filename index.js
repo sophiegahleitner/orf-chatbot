@@ -22,4 +22,5 @@ server.get('/', (req, res) => {
 server.post('/orf-data', (request, response) => agent(request, response));
 
 // runCRON();
+updatePersonIds();
 server.listen(PORT, () => console.log(`Listening on ${ PORT }`));
