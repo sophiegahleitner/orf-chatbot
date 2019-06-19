@@ -1,16 +1,10 @@
 const axios = require('axios');
 const url = 'https://appfeeds.orf.at/alpine.v2/api';
-const mysql = require('mysql');
-
-const dburl = 'eu-cdbr-west-02.cleardb.net';
-const dbusername = 'b28f3fe203bde0';
-const dbpw = '5c818038';
-const dbname = 'heroku_384ac690adcffdc';
-
+import * as helper from './helper-functions';
 
 
 export function getPersonData(name) {
-    return getIdByName(name)
+    return helper.getIdByName(name)
         .then((id) => {
             return new Promise((resolve, reject) => {
                 axios.get(url + '/person/' + id)
@@ -32,6 +26,22 @@ export function getPersonData(name) {
         );
 }
 
+export function getWorldcupRanking(discipline, gender) {
+    let id = helper.getCupId(gender, discipline);
+    console.log("getworldcupid:" +id);
+    return new Promise((resolve, reject) => {
+        axios.get(url + '/cuprankings/' + id)
+            .then(resp =>{
+                resolve(resp);
+            })
+            .catch(resp => {
+                console.log(resp);
+                reject(resp);
+            })
+    })
+}
+
+
 
 export function getRecordWinner(compId, discId, genId, locId, number = 5) {
     return new Promise((resolve, reject) => {
@@ -41,35 +51,3 @@ export function getRecordWinner(compId, discId, genId, locId, number = 5) {
     })
 }
 
-function getIdByName(name) {
-    return new Promise(function (resolve, reject){
-        console.log("Type:" + typeof (name) + ' Name: ' + name);
-        name = name.toLowerCase();
-        let nameArray = name.match(/\S+/g);
-        console.log(nameArray[0]);
-
-        let sql = `SELECT * FROM persons WHERE firstname LIKE '${nameArray[0]}%' AND lastname LIKE '${nameArray[nameArray.length - 1]}%';`;
-
-        let con = mysql.createConnection({
-            host: dburl,
-            user: dbusername,
-            password: dbpw,
-            database: dbname
-        });
-
-        con.connect(function (err) {
-            // if (err) reject(err);
-            con.query(sql, function (err, result) {
-                if (err) return reject(err);
-                if(err || result[0] == null|| result[0].orf_id ===undefined||result[0]===undefined){
-                    reject("Person wurde nicht gefunden.");
-                }
-                else{
-                    resolve(result[0].orf_id);
-                }
-            });
-            con.end();
-
-        });
-    });
-}
