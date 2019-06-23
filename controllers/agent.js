@@ -1,77 +1,90 @@
 const {WebhookClient} = require('dialogflow-fulfillment');
-// const {Card, Suggestion} = require('dialogflow-fulfillment');
-import * as staticdata from '../intenthandling/staticdata';
+import * as athlete from '../intenthandling/athlete.js';
+import * as worldcup from '../intenthandling/worldcup.js';
 
-const iso = require("i18n-iso-countries");
-
-
-export function test() {
-    console.log("test");
-}
-
+/**
+ * @param request
+ * @param response
+ * @returns {*}
+ */
 export function agent(request, response) {
     const agent = new WebhookClient({request, response});
     console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
     console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
 
+    /**
+     * @param agent
+     */
     function welcome(agent) {
         agent.add(`Willkommen zum ORF Bot! Sie können beispielsweise nach Infos zu Sportlerinnen und Sportler fragen oder sich über Zwischenstände in Weltcups informieren.`);
     }
 
+    /**
+     * @param agent
+     */
+
     function fallback(agent) {
         agent.add(`Ich kann das nicht verstehen. Sie können beispielsweise nach dem Alter einer Person fragen oder den Zwischenständen in Weltcups fragen.`);
-        agent.add(`Kannst du das bitte wiederholen?`);
+        agent.add('Leider habe ich deine Frage nicht verstanden. Du kannst mich gerne nach dem derzeitigen Stand im Weltcup fragen.');
+        agent.add('Leider kann ich deine Frage nicht beantworten. Du kannst mich gerne nach dem derzeitigen Stand im Weltcup fragen.');
     }
 
+    /**
+     * @param agent
+     * @returns {Promise<any>}
+     */
     function sendAthleteAge(agent) {
-        return staticdata.getPersonData(agent.parameters.athletename)
-            .then(resp => {
-                agent.add(agent.parameters.athletename + ` ist ${resp.data.Age} Jahre alt.`);
+        return athlete.getAge(agent.parameters['athletename'])
+            .then(res => {
+                agent.add(`${res['firstname']} ${res['lastname']} ist ${res['age']} Jahre alt.`);
             })
-            .catch(res => {
-                console.log("Agent:" + res);
-                agent.add("Es ist folgender Fehler aufgetreten: " + res);
+            .catch(err => {
+                agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
             });
     }
 
+    /**
+     * @param agent
+     * @returns {Promise<any>}
+     */
     function sendAthleteHeight(agent) {
-         return staticdata.getPersonData(agent.parameters.athletename)
-            .then(resp => {
-                console.log(agent.parameters.athletename);
-                agent.add(agent.parameters["athletename"] + ` ist ${resp.data.Height} Zentimeter groß.`);
+        return athlete.getHeight(agent.parameters['athletename'])
+            .then(res => {
+                agent.add(`${res['firstname']} ${res['lastname']} ist ${res['height']} m groß.`);
             })
-            .catch(res => {
-                console.log("Agent:" + res);
-                agent.add("Es ist folgender Fehler aufgetreten: " + res);
+            .catch(err => {
+                agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
             });
     }
 
+    /**
+     * @param agent
+     * @returns {Promise<any>}
+     */
     function sendAthleteNation(agent) {
-        return staticdata.getPersonData(agent.parameters.athletename)
-            .then(resp => {
-                let nation = getCountryString(resp.data.NationName);
-                agent.add(agent.parameters.athletename + ` ist von ${nation} .`);
+        return athlete.getNation(agent.parameters['athletename'])
+            .then(res => {
+                agent.add(`${res['firstname']} ${res['lastname']} ist von ${res['nation']}.`);
             })
-            .catch(res => {
-                console.log("Agent:" + res);
-                agent.add("Es ist folgender Fehler aufgetreten: " + res);
-            });
-    }
-    function sendWorldcupRanking(agent){
-        return staticdata.getWorldcupRanking(agent.parameters.discipline, agent.parameters.gender)
-            .then(resp => {
-                let answerstring = `Im ${resp.data.RankingName} Weltcup ist ${resp.data.PersonRankings[agent.parameters.ranking-1].FirstName} ${resp.data.PersonRankings[agent.parameters["ranking"]-1].LastName} aus ${getCountryString(resp.data.PersonRankings[agent.parameters["ranking"]-1].NationCC3)} mit ${resp.data.PersonRankings[agent.parameters["ranking"]-1].Value} Punkten auf Platz ${agent.parameters["ranking"]} (${resp.data.RankingDescription})`
-                agent.add(answerstring);
-            })
-            .catch(res => {
-                agent.add("Es ist folgender Fehler aufgetreten: " + res);
+            .catch(err => {
+                agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
             });
     }
 
-    function getCountryString(alpha3){
-        return iso.getName(alpha3, "de");
-
+    /**
+     * @param agent
+     * @returns {Promise.<TResult>}
+     */
+    function sendWorldcupRanking(agent) {
+        return worldcup.getWorldCupStatus(agent.parameters['gender'], agent.parameters['discipline'], agent.parameters['ranking'])
+            .then(res => {
+                agent.add(`Im ${res['cup']} ist ${res['athlete']} aus ${res['nation']} mit ${res['points']} Punkten auf Platz ${res['position']} (${res['description']}).`);
+            })
+            .catch(err => {
+                agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
+            });
     }
+
     let intentMap = new Map();
     intentMap.set('Default Welcome Intent', welcome);
     intentMap.set('Default Fallback Intent', fallback);
