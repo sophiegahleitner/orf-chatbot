@@ -1,6 +1,7 @@
 const axios = require('axios');
 const url = 'https://appfeeds.orf.at/alpine.v2/api';
 const iso = require('i18n-iso-countries');
+var lookup = require('country-data').lookup;
 
 import {getAthleteIdByName} from './helper-functions';
 
@@ -137,5 +138,7 @@ function centimeterToMeter(value) {
  * @returns {string}
  */
 function getNationOfAlphaCode(code) {
-  return iso.getName(code, 'de');
+    let isocode = lookup.countries({ioc: code})[0]["alpha3"];
+
+    return iso.getName(isocode, 'de');
 }

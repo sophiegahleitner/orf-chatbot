@@ -1,6 +1,8 @@
 const axios = require('axios');
 const url = 'https://appfeeds.orf.at/alpine.v2/api';
 const iso = require('i18n-iso-countries');
+var lookup = require('country-data').lookup;
+
 
 /**
  * @param gender
@@ -68,5 +70,7 @@ function getCupId(gender, discipline) {
  * @returns {string}
  */
 function getNationOfAlphaCode(code) {
-  return iso.getName(code, 'de');
+    let isocode = lookup.countries({ioc: code})[0]["alpha3"];
+
+    return iso.getName(isocode, 'de');
 }
