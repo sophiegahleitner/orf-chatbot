@@ -7,7 +7,6 @@ const PORT = process.env.PORT || 5000;
 const {agent} = require('./controllers/agent');
 const {frontend} = require('./client/widget');
 const {runCRON, updatePersonIds} = require('./cron/update-lookup');
-const {getIdByName} = require('./intenthandling/staticdata');
 
 const server = express();
 server.use(express.static(path.join(__dirname, 'public')));
@@ -22,5 +21,4 @@ server.get('/', (req, res) => {
 server.post('/orf-data', (request, response) => agent(request, response));
 
 // runCRON();
-updatePersonIds();
 server.listen(PORT, () => console.log(`Listening on ${ PORT }`));
