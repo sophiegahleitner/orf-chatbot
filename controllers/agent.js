@@ -43,8 +43,13 @@ export function agent(request, response) {
             });
     }
     function sendAthleteAgeFromContext(agent) {
-        agent.parameters['athletename'] = agent.contexts[0].parameters['athletename'];
-        return sendAthleteAge(agent);
+        if(agent.contexts.length > 0 && agent.contexts[0].parameters['athletename'] === "string"){
+            agent.parameters['athletename'] = agent.contexts[0].parameters['athletename'];
+            return sendAthleteAge(agent);
+        }
+        else{
+            agent.add("Bitte stellen Sie die Frage noch einmal.");
+        }
     }
 
     /**
