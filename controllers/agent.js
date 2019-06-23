@@ -42,6 +42,10 @@ export function agent(request, response) {
                 agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
             });
     }
+    function sendAthleteAgeFromContext(agent) {
+        agent.parameters['athletename'] = agent.contexts[0].parameters['athletename'];
+        return sendAthleteAge(agent);
+    }
 
     /**
      * @param agent
@@ -89,6 +93,7 @@ export function agent(request, response) {
     intentMap.set('Default Welcome Intent', welcome);
     intentMap.set('Default Fallback Intent', fallback);
     intentMap.set('ORF.athlete.age', sendAthleteAge);
+    intentMap.set('ORF.athlete.age.context', sendAthleteAgeFromContext);
     intentMap.set('ORF.athlete.height', sendAthleteHeight);
     intentMap.set('ORF.athlete.nation', sendAthleteNation);
     intentMap.set('ORF.worldcup.status', sendWorldcupRanking);

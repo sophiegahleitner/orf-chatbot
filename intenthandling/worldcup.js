@@ -14,6 +14,9 @@ export function getWorldCupStatus(gender, discipline, pos) {
   return new Promise((resolve, reject) => {
     getWorldCupRanking(gender, discipline)
       .then((res) => {
+          if(typeof pos === 'string' && pos === 'führt'){
+              pos = 1;
+          }
         resolve({
             cup: res.cup,
             athlete: res.rankings[pos - 1]['FirstName'] + ' ' + res.rankings[pos - 1]['LastName'],
@@ -58,6 +61,7 @@ export function getWorldCupRanking(gender, discipline) {
  * @returns int cupId
  */
 function getCupId(gender, discipline) {
+    //lookup object for cups
   const lookup = {
     1: {0: 4, 1: 5, 2: 6, 3: 7, 4: 8, 5: 9},
     2: {0: 10, 1: 11, 2: 12, 3: 13, 4: 14, 5: 15}
@@ -71,6 +75,5 @@ function getCupId(gender, discipline) {
  */
 function getNationOfAlphaCode(code) {
     let isocode = lookup.countries({ioc: code})[0]["alpha3"];
-
     return iso.getName(isocode, 'de');
 }
