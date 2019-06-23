@@ -42,13 +42,32 @@ export function agent(request, response) {
                 agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
             });
     }
+
+    /**
+     * @param agent
+     * @returns {Promise.<any>}
+     */
     function sendAthleteAgeFromContext(agent) {
         if(agent.contexts.length > 0 && agent.contexts[0].parameters['athletename'] === "string"){
             agent.parameters['athletename'] = agent.contexts[0].parameters['athletename'];
             return sendAthleteAge(agent);
         }
         else{
-            agent.add("Bitte stellen Sie die Frage noch einmal.");
+            agent.add("Bitte stellen Sie die Frage inklusive Namen noch einmal.");
+        }
+    }
+
+    /**
+     * @param agent
+     * @returns {Promise.<any>}
+     */
+    function sendAthleteNationFromContext(agent) {
+        if(agent.contexts.length > 0 && agent.contexts[0].parameters['athletename'] === "string"){
+            agent.parameters['athletename'] = agent.contexts[0].parameters['athletename'];
+            return sendAthleteNation(agent);
+        }
+        else{
+            agent.add("Bitte stellen Sie die Frage inklusive Namen noch einmal.");
         }
     }
 
@@ -101,6 +120,7 @@ export function agent(request, response) {
     intentMap.set('ORF.athlete.age.context', sendAthleteAgeFromContext);
     intentMap.set('ORF.athlete.height', sendAthleteHeight);
     intentMap.set('ORF.athlete.nation', sendAthleteNation);
+    intentMap.set('ORF.athlete.nation.context', sendAthleteNationFromContext);
     intentMap.set('ORF.worldcup.status', sendWorldcupRanking);
     // intentMap.set('ORF.athlete.weight', sendAthleteWeight);
     // intentMap.set('ORF.athlete.equipment', sendAthleteEquipment);
