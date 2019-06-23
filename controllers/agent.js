@@ -15,11 +15,11 @@ export function agent(request, response) {
     console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
 
     function welcome(agent) {
-        agent.add(`Willkommen zum ORF Bot!`);
+        agent.add(`Willkommen zum ORF Bot! Sie können beispielsweise nach Infos zu Sportlerinnen und Sportler fragen oder sich über Zwischenstände in Weltcups informieren.`);
     }
 
     function fallback(agent) {
-        agent.add(`Ich kann das nicht verstehen.`);
+        agent.add(`Ich kann das nicht verstehen. Sie können beispielsweise nach dem Alter einer Person fragen oder den Zwischenständen in Weltcups fragen.`);
         agent.add(`Kannst du das bitte wiederholen?`);
     }
 
@@ -38,7 +38,7 @@ export function agent(request, response) {
          return staticdata.getPersonData(agent.parameters.athletename)
             .then(resp => {
                 console.log(agent.parameters.athletename);
-                agent.add(agent.parameters.athletename + ` ist ${resp.data.Height} Zentimeter groß.`);
+                agent.add(agent.parameters["athletename"] + ` ist ${resp.data.Height} Zentimeter groß.`);
             })
             .catch(res => {
                 console.log("Agent:" + res);
@@ -49,7 +49,7 @@ export function agent(request, response) {
     function sendAthleteNation(agent) {
         return staticdata.getPersonData(agent.parameters.athletename)
             .then(resp => {
-                let nation = iso.whereAlpha3(resp.data.NationName);
+                let nation = getCountryString(resp.data.NationName);
                 agent.add(agent.parameters.athletename + ` ist von ${nation} .`);
             })
             .catch(res => {
@@ -60,7 +60,7 @@ export function agent(request, response) {
     function sendWorldcupRanking(agent){
         return staticdata.getWorldcupRanking(agent.parameters.discipline, agent.parameters.gender)
             .then(resp => {
-                let answerstring = `Im ${resp.data.RankingName} ist ${resp.data.PersonRankings[agent.parameters.ranking-1].FirstName} ${resp.data.PersonRankings[agent.parameters.ranking-1].LastName} aus ${getCountryString(resp.data.PersonRankings[agent.parameters.ranking-1].NationCC3)} mit ${resp.data.PersonRankings[agent.parameters.ranking-1].Value} Punkten auf Platz ${agent.parameters.ranking} (${resp.data.RankingDescription})`
+                let answerstring = `Im ${resp.data.RankingName} Weltcup ist ${resp.data.PersonRankings[agent.parameters.ranking-1].FirstName} ${resp.data.PersonRankings[agent.parameters["ranking"]-1].LastName} aus ${getCountryString(resp.data.PersonRankings[agent.parameters["ranking"]-1].NationCC3)} mit ${resp.data.PersonRankings[agent.parameters["ranking"]-1].Value} Punkten auf Platz ${agent.parameters["ranking"]} (${resp.data.RankingDescription})`
                 agent.add(answerstring);
             })
             .catch(res => {
