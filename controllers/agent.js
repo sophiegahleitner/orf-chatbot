@@ -107,7 +107,7 @@ export function agent(request, response) {
     function sendAthleteWeight(agent) {
         return athlete.getWeight(agent.parameters['athletename'])
             .then(res => {
-                agent.add(`${res['firstname']} ${res['lastname']} ist ${res['weight']} Kilgramm schwer.`);
+                agent.add(`${res['firstname']} ${res['lastname']} ist ${res['weight']} Kilogramm schwer.`);
             })
             .catch(err => {
                 agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
@@ -322,6 +322,7 @@ export function agent(request, response) {
     intentMap.set('ORF.fanfact.headline.yes', sendFanfactContent);
     intentMap.set('ORF.fanfact.headline.yes.more', sendNextFanfactHeadline);
     intentMap.set('ORF.fanfact.headline.more', sendNextFanfactHeadline);
+    intentMap.set('ORF.fanfact.headline.no.yes', sendNextFanfactHeadline);
     // intentMap.set('ORF.fanfact.recordwinne', next);
 
     agent.handleRequest(intentMap);
