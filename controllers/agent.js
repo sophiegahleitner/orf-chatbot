@@ -275,7 +275,7 @@ export function agent(request, response) {
         return worldcup.getWorldCupStatus(agent.parameters['gender'], agent.parameters['discipline'], agent.parameters['ranking'])
             .then(res => {
                 const parameters = { // Custom parameters to pass with context
-                    athletename: res['athlete']
+                    athletename: {person: {name: res['athlete']}}
                 };
                 agent.context.set('athlete', 5, parameters);
                 agent.add(`Im ${res['cup']} ist ${res['athlete']} aus ${res['nation']} mit ${res['points']} Punkten auf Platz ${res['position']} (${res['description']}).`);
@@ -323,7 +323,7 @@ export function agent(request, response) {
     intentMap.set('ORF.fanfact.headline.yes.more', sendNextFanfactHeadline);
     intentMap.set('ORF.fanfact.headline.more', sendNextFanfactHeadline);
     intentMap.set('ORF.fanfact.headline.no.yes', sendNextFanfactHeadline);
-    // intentMap.set('ORF.fanfact.recordwinne', next);
+    // intentMap.set('ORF.recordwinner', next);
 
     agent.handleRequest(intentMap);
     return agent;
