@@ -119,7 +119,7 @@ export function getBirthdate(name) {
         getAthleteDataByName(name)
             .then((res) => {
                 resolve({
-                        birthdate: res.data['BirthDate'],
+                        birthdate: res.data['BirthDay'],
                         firstname: capitalizeFirstLetter(getFirstName(name)),
                         lastname: capitalizeFirstLetter(getLastName(name))
                     }

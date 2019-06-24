@@ -2,6 +2,7 @@ const {WebhookClient} = require('dialogflow-fulfillment');
 import * as athlete from '../intenthandling/athlete.js';
 import * as worldcup from '../intenthandling/worldcup.js';
 import * as fanfact from '../intenthandling/fanfact.js';
+import * as recordwinner from '../intenthandling/recordwinner.js';
 
 /**
  * @param request
@@ -106,7 +107,7 @@ export function agent(request, response) {
     function sendAthleteWeight(agent) {
         return athlete.getWeight(agent.parameters['athletename'])
             .then(res => {
-                agent.add(`${res['firstname']} ${res['lastname']} ist ${res['weight']} schwer.`);
+                agent.add(`${res['firstname']} ${res['lastname']} ist ${res['weight']} Kilgramm schwer.`);
             })
             .catch(err => {
                 agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
@@ -293,7 +294,6 @@ export function agent(request, response) {
             agent.add("Unbekannter Fehler: " + e);
             return e;
         }
-        console.log("id: "+id);
         return id
     }
     function setParamFromContextParam(agent){
@@ -315,11 +315,14 @@ export function agent(request, response) {
     intentMap.set('ORF.athlete.equipment.context', sendAthleteEquipmentFromContext);
     intentMap.set('ORF.athlete.birthplace', sendAthleteBirthplace);
     intentMap.set('ORF.athlete.birthplace.context', sendAthleteBirthdateFromContext);
+    intentMap.set('ORF.athlete.birthday', sendAthleteBirthdate);
+    intentMap.set('ORF.athlete.birthday.context', sendAthleteBirthdateFromContext);
     intentMap.set('ORF.worldcup.status', sendWorldcupRanking);
     intentMap.set('ORF.fanfact.headline', sendFanfactHeadline);
     intentMap.set('ORF.fanfact.headline.yes', sendFanfactContent);
     intentMap.set('ORF.fanfact.headline.yes.more', sendNextFanfactHeadline);
     intentMap.set('ORF.fanfact.headline.more', sendNextFanfactHeadline);
+    // intentMap.set('ORF.fanfact.recordwinne', next);
 
     agent.handleRequest(intentMap);
     return agent;
