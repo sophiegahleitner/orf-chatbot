@@ -1,6 +1,7 @@
 const {WebhookClient} = require('dialogflow-fulfillment');
 import * as athlete from '../intenthandling/athlete.js';
 import * as worldcup from '../intenthandling/worldcup.js';
+import * as fanfact from '../intenthandling/fanfact.js';
 
 /**
  * @param request
@@ -89,6 +90,38 @@ export function agent(request, response) {
 
     /**
      * @param agent
+     * @returns {Promise.<TResult>}
+     */
+    function sendFanfactHeadline(agent) {
+        const parameters = { // Custom parameters to pass with context
+            localid: 0
+        };
+        return fanfact.getFanfact()
+            .then(res => {
+                agent.contexts.set('ORFfanfactheadline-followup', 5, parameters);
+                agent.add(`${res['headline']}. Möchten Sie mehr dazu wissen?`);
+            })
+            .catch(err => {
+                agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
+            });
+    }
+
+    function sendFanfactContent(agent) {
+        const parameters = { // Custom parameters to pass with context
+            localid: 1
+        };
+        return fanfact.getFanfact()
+            .then(res => {
+                agent.contexts.set('ORFfanfactheadline-followup', 5, parameters);
+                agent.add(`${res['content']}. Möchten Sie mehr dazu wissen?`);
+            })
+            .catch(err => {
+                agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
+            });
+    }
+
+    /**
+     * @param agent
      * @returns {Promise<any>}
      */
     function sendAthleteNation(agent) {
@@ -124,6 +157,8 @@ export function agent(request, response) {
     intentMap.set('ORF.athlete.nation', sendAthleteNation);
     intentMap.set('ORF.athlete.nation.context', sendAthleteNationFromContext);
     intentMap.set('ORF.worldcup.status', sendWorldcupRanking);
+    intentMap.set('ORF.fanfact.headline', sendFanfactHeadline);
+    intentMap.set('ORF.fanfact.headline.yes', sendFanfactContent);
     // intentMap.set('ORF.athlete.weight', sendAthleteWeight);
     // intentMap.set('ORF.athlete.equipment', sendAthleteEquipment);
     agent.handleRequest(intentMap);
