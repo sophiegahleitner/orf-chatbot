@@ -13,12 +13,23 @@ export function getAge(name) {
   return new Promise((resolve, reject) => {
     getAthleteDataByName(name)
       .then((res) => {
-        resolve({
-            age: res.data['Age'],
-            firstname: capitalizeFirstLetter(getFirstName(name)),
-            lastname: capitalizeFirstLetter(getLastName(name))
-          }
-        );
+        if (res.data['Age'] === null) {
+          let birthday = new Date(res.data['BirthDay']);
+          let seconds = new Date() - birthday;
+          resolve({
+              age: Math.floor(seconds / (1000 * 60 * 60 * 24)),
+              firstname: capitalizeFirstLetter(getFirstName(name)),
+              lastname: capitalizeFirstLetter(getLastName(name))
+            }
+          );
+        } else {
+          resolve({
+              age: res.data['Age'],
+              firstname: capitalizeFirstLetter(getFirstName(name)),
+              lastname: capitalizeFirstLetter(getLastName(name))
+            }
+          );
+        }
       })
       .catch((err) => {
         reject(err);
@@ -52,20 +63,20 @@ export function getHeight(name) {
  * @returns {Promise<any>}
  */
 export function getWeight(name) {
-    return new Promise((resolve, reject) => {
-        getAthleteDataByName(name)
-            .then((res) => {
-                resolve({
-                        weight: res.data['Weight'],
-                        firstname: capitalizeFirstLetter(getFirstName(name)),
-                        lastname: capitalizeFirstLetter(getLastName(name))
-                    }
-                );
-            })
-            .catch((err) => {
-                reject(err);
-            });
-    });
+  return new Promise((resolve, reject) => {
+    getAthleteDataByName(name)
+      .then((res) => {
+        resolve({
+            weight: res.data['Weight'],
+            firstname: capitalizeFirstLetter(getFirstName(name)),
+            lastname: capitalizeFirstLetter(getLastName(name))
+          }
+        );
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
 }
 
 /**
@@ -73,20 +84,20 @@ export function getWeight(name) {
  * @returns {Promise<any>}
  */
 export function getEquipment(name) {
-    return new Promise((resolve, reject) => {
-        getAthleteDataByName(name)
-            .then((res) => {
-                resolve({
-                        equipment: res.data['Equipment'],
-                        firstname: capitalizeFirstLetter(getFirstName(name)),
-                        lastname: capitalizeFirstLetter(getLastName(name))
-                    }
-                );
-            })
-            .catch((err) => {
-                reject(err);
-            });
-    });
+  return new Promise((resolve, reject) => {
+    getAthleteDataByName(name)
+      .then((res) => {
+        resolve({
+            equipment: res.data['Equipment'],
+            firstname: capitalizeFirstLetter(getFirstName(name)),
+            lastname: capitalizeFirstLetter(getLastName(name))
+          }
+        );
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
 }
 
 /**
@@ -94,20 +105,20 @@ export function getEquipment(name) {
  * @returns {Promise<any>}
  */
 export function getBirthplace(name) {
-    return new Promise((resolve, reject) => {
-        getAthleteDataByName(name)
-            .then((res) => {
-                resolve({
-                        birthplace: res.data['BirthPlace'],
-                        firstname: capitalizeFirstLetter(getFirstName(name)),
-                        lastname: capitalizeFirstLetter(getLastName(name))
-                    }
-                );
-            })
-            .catch((err) => {
-                reject(err);
-            });
-    });
+  return new Promise((resolve, reject) => {
+    getAthleteDataByName(name)
+      .then((res) => {
+        resolve({
+            birthplace: res.data['BirthPlace'],
+            firstname: capitalizeFirstLetter(getFirstName(name)),
+            lastname: capitalizeFirstLetter(getLastName(name))
+          }
+        );
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
 }
 
 /**
@@ -115,20 +126,20 @@ export function getBirthplace(name) {
  * @returns {Promise<any>}
  */
 export function getBirthdate(name) {
-    return new Promise((resolve, reject) => {
-        getAthleteDataByName(name)
-            .then((res) => {
-                resolve({
-                        birthdate: res.data['BirthDay'],
-                        firstname: capitalizeFirstLetter(getFirstName(name)),
-                        lastname: capitalizeFirstLetter(getLastName(name))
-                    }
-                );
-            })
-            .catch((err) => {
-                reject(err);
-            });
-    });
+  return new Promise((resolve, reject) => {
+    getAthleteDataByName(name)
+      .then((res) => {
+        resolve({
+            birthdate: formatDate(new Date(res.data['BirthDay'])),
+            firstname: capitalizeFirstLetter(getFirstName(name)),
+            lastname: capitalizeFirstLetter(getLastName(name))
+          }
+        );
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
 }
 
 /**
@@ -222,7 +233,21 @@ function centimeterToMeter(value) {
  * @returns {string}
  */
 function getNationOfAlphaCode(code) {
-    let isocode = lookup.countries({ioc: code})[0]["alpha3"];
+  let isocode = lookup.countries({ioc: code})[0]["alpha3"];
 
-    return iso.getName(isocode, 'de');
+  return iso.getName(isocode, 'de');
+}
+
+/**
+ * @param date
+ * @returns {string}
+ */
+function formatDate(date) {
+  let monthNames = ['Jänner', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+
+  let day = date.getDate();
+  let month = date.getMonth();
+  let year = date.getFullYear();
+
+  return day + '. ' + monthNames[month] + ' ' + year;
 }
