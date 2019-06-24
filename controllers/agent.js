@@ -214,7 +214,7 @@ export function agent(request, response) {
         return fanfact.getFanfact()
             .then(res => {
                 agent.context.set('ORFfanfactheadline-followup', 5, parameters);
-                agent.add(`${res['headline']}. Möchten Sie mehr dazu wissen oder möchten Sie einen anderen Fakt oder ?`);
+                agent.add(`${res['headline']}. Möchten Sie mehr dazu wissen?`);
             })
             .catch(err => {
                 agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
