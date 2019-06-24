@@ -98,7 +98,7 @@ export function agent(request, response) {
         };
         return fanfact.getFanfact()
             .then(res => {
-                agent.contexts.set('ORFfanfactheadline-followup', 5, parameters);
+                agent.context.set('ORFfanfactheadline-followup', 5, parameters);
                 agent.add(`${res['headline']}. Möchten Sie mehr dazu wissen?`);
             })
             .catch(err => {
@@ -112,7 +112,7 @@ export function agent(request, response) {
         };
         return fanfact.getFanfact()
             .then(res => {
-                agent.contexts.set('ORFfanfactheadline-followup', 5, parameters);
+                agent.context.set('ORFfanfactheadline-followup', 5, parameters);
                 agent.add(`${res['content']}. Möchten Sie mehr dazu wissen?`);
             })
             .catch(err => {
