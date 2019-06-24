@@ -50,7 +50,7 @@ export function agent(request, response) {
      */
     function sendAthleteAgeFromContext(agent) {
         if(agent.context.get("athlete")){
-            agent.parameters['athletename'] = agent.context.get("athlete").parameters['athletename'];
+            setParamFromContextParam(agent);
             return sendAthleteAge(agent);
         }
         else{
@@ -63,9 +63,8 @@ export function agent(request, response) {
      * @returns {Promise.<any>}
      */
     function sendAthleteNationFromContext(agent) {
-        // agent.context.get('');
-        if(agent.contexts.length > 0 && typeof agent.contexts[0].parameters['athletename'] === "string"){
-            agent.parameters['athletename'] = agent.contexts[0].parameters['athletename'];
+        if(agent.context.get("athlete")){
+            agent.parameters['athletename'] = agent.context.get("athlete").parameters['athletename'];
             return sendAthleteNation(agent);
         }
         else{
@@ -86,6 +85,19 @@ export function agent(request, response) {
                 agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
             });
     }
+    /**
+     * @param agent
+     * @returns {Promise.<any>}
+     */
+    function sendAthleteHeightFromContext(agent) {
+        if(agent.context.get("athlete")){
+            agent.parameters['athletename'] = agent.context.get("athlete").parameters['athletename'];
+            return sendAthleteHeight(agent);
+        }
+        else{
+            agent.add("Bitte stellen Sie die Frage inklusive Namen noch einmal.");
+        }
+    }
 
     /**
      * @param agent
@@ -99,6 +111,20 @@ export function agent(request, response) {
             .catch(err => {
                 agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
             });
+    }
+
+    /**
+     * @param agent
+     * @returns {Promise.<any>}
+     */
+    function sendAthleteWeightFromContext(agent) {
+        if(agent.context.get("athlete")){
+            agent.parameters['athletename'] = agent.context.get("athlete").parameters['athletename'];
+            return sendAthleteWeight(agent);
+        }
+        else{
+            agent.add("Bitte stellen Sie die Frage inklusive Namen noch einmal.");
+        }
     }
     /**
      * @param agent
@@ -116,6 +142,19 @@ export function agent(request, response) {
     }
     /**
      * @param agent
+     * @returns {Promise.<any>}
+     */
+    function sendAthleteEquipmentFromContext(agent) {
+        if(agent.context.get("athlete")){
+            agent.parameters['athletename'] = agent.context.get("athlete").parameters['athletename'];
+            return sendAthleteEquipment(agent);
+        }
+        else{
+            agent.add("Bitte stellen Sie die Frage inklusive Namen noch einmal.");
+        }
+    }
+    /**
+     * @param agent
      * @returns {Promise<any>}
      */
     function sendAthleteBirthdate(agent) {
@@ -126,6 +165,19 @@ export function agent(request, response) {
             .catch(err => {
                 agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
             });
+    }
+    /**
+     * @param agent
+     * @returns {Promise.<any>}
+     */
+    function sendAthleteBirthdateFromContext(agent) {
+        if(agent.context.get("athlete")){
+            agent.parameters['athletename'] = agent.context.get("athlete").parameters['athletename'];
+            return sendAthleteBirthdate(agent);
+        }
+        else{
+            agent.add("Bitte stellen Sie die Frage inklusive Namen noch einmal.");
+        }
     }
 
     /**
@@ -141,7 +193,15 @@ export function agent(request, response) {
                 agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
             });
     }
-
+    function sendAthleteBirthplaceFromContext(agent) {
+        if(agent.context.get("athlete")){
+            agent.parameters['athletename'] = agent.context.get("athlete").parameters['athletename'];
+            return sendAthleteBirthplace(agent);
+        }
+        else{
+            agent.add("Bitte stellen Sie die Frage inklusive Namen noch einmal.");
+        }
+    }
     /**
      * @param agent
      * @returns {Promise.<TResult>}
@@ -236,6 +296,9 @@ export function agent(request, response) {
         console.log("id: "+id);
         return id
     }
+    function setParamFromContextParam(agent){
+        agent.parameters['athletename'] = agent.context.get("athlete").parameters['athletename'];
+    }
 
     let intentMap = new Map();
     intentMap.set('Default Welcome Intent', welcome);
@@ -243,12 +306,15 @@ export function agent(request, response) {
     intentMap.set('ORF.athlete.age', sendAthleteAge);
     intentMap.set('ORF.athlete.age.context', sendAthleteAgeFromContext);
     intentMap.set('ORF.athlete.height', sendAthleteHeight);
+    intentMap.set('ORF.athlete.height.context', sendAthleteHeightFromContext);
     intentMap.set('ORF.athlete.nation', sendAthleteNation);
     intentMap.set('ORF.athlete.nation.context', sendAthleteNationFromContext);
     intentMap.set('ORF.athlete.weight', sendAthleteWeight);
+    intentMap.set('ORF.athlete.weight.context', sendAthleteWeightFromContext);
     intentMap.set('ORF.athlete.equipment', sendAthleteEquipment);
+    intentMap.set('ORF.athlete.equipment.context', sendAthleteEquipmentFromContext);
     intentMap.set('ORF.athlete.birthplace', sendAthleteBirthplace);
-    intentMap.set('ORF.athlete.birthplace', sendAthleteBirthdate);
+    intentMap.set('ORF.athlete.birthplace.context', sendAthleteBirthdateFromContext);
     intentMap.set('ORF.worldcup.status', sendWorldcupRanking);
     intentMap.set('ORF.fanfact.headline', sendFanfactHeadline);
     intentMap.set('ORF.fanfact.headline.yes', sendFanfactContent);
