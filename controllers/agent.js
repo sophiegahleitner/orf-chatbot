@@ -91,8 +91,8 @@ export function agent(request, response) {
      * @returns {Promise.<any>}
      */
     function sendAthleteHeightFromContext(agent) {
-        if(agent.context.get("athlete")){
-            agent.parameters['athletename']['person']['name'] = agent.context.get("athlete").parameters['athletename']['person']['name'];
+        if(agent.context.get("athlete")) {
+            setParamFromContextParam(agent);
             return sendAthleteHeight(agent);
         }
         else{
@@ -120,7 +120,7 @@ export function agent(request, response) {
      */
     function sendAthleteWeightFromContext(agent) {
         if(agent.context.get("athlete")){
-            agent.parameters['athletename']['person']['name'] = agent.context.get("athlete").parameters['athletename']['person']['name'];
+            setParamFromContextParam(agent);
             return sendAthleteWeight(agent);
         }
         else{
@@ -147,7 +147,7 @@ export function agent(request, response) {
      */
     function sendAthleteEquipmentFromContext(agent) {
         if(agent.context.get("athlete")){
-            agent.parameters['athletename']['person']['name'] = agent.context.get("athlete").parameters['athletename']['person']['name'];
+            setParamFromContextParam(agent);
             return sendAthleteEquipment(agent);
         }
         else{
@@ -173,7 +173,7 @@ export function agent(request, response) {
      */
     function sendAthleteBirthdateFromContext(agent) {
         if(agent.context.get("athlete")){
-            agent.parameters['athletename']['person']['name'] = agent.context.get("athlete").parameters['athletename']['person']['name'];
+            setParamFromContextParam(agent);
             return sendAthleteBirthdate(agent);
         }
         else{
@@ -196,7 +196,7 @@ export function agent(request, response) {
     }
     function sendAthleteBirthplaceFromContext(agent) {
         if(agent.context.get("athlete")){
-            agent.parameters['athletename']['person']['name'] = agent.context.get("athlete").parameters['athletename']['person']['name'];
+            setParamFromContextParam(agent);
             return sendAthleteBirthplace(agent);
         }
         else{
@@ -297,7 +297,7 @@ export function agent(request, response) {
         return id
     }
     function setParamFromContextParam(agent){
-        agent.parameters['athletename']['person']['name'] = agent.context.get("athlete").parameters['athletename']['person']['name'];
+        agent.parameters['athletename']= agent.context.get("athlete").parameters['athletename'];
     }
 
     let intentMap = new Map();
@@ -314,7 +314,7 @@ export function agent(request, response) {
     intentMap.set('ORF.athlete.equipment', sendAthleteEquipment);
     intentMap.set('ORF.athlete.equipment.context', sendAthleteEquipmentFromContext);
     intentMap.set('ORF.athlete.birthplace', sendAthleteBirthplace);
-    intentMap.set('ORF.athlete.birthplace.context', sendAthleteBirthdateFromContext);
+    intentMap.set('ORF.athlete.birthplace.context', sendAthleteBirthplaceFromContext);
     intentMap.set('ORF.athlete.birthday', sendAthleteBirthdate);
     intentMap.set('ORF.athlete.birthday.context', sendAthleteBirthdateFromContext);
     intentMap.set('ORF.worldcup.status', sendWorldcupRanking);
