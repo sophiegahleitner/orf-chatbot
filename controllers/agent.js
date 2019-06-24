@@ -63,8 +63,7 @@ export function agent(request, response) {
      * @returns {Promise.<any>}
      */
     function sendAthleteNationFromContext(agent) {
-        console.log(agent);
-        console.log(agent.contexts[0]);
+        // agent.context.get('');
         if(agent.contexts.length > 0 && typeof agent.contexts[0].parameters['athletename'] === "string"){
             agent.parameters['athletename'] = agent.contexts[0].parameters['athletename'];
             return sendAthleteNation(agent);
@@ -106,14 +105,32 @@ export function agent(request, response) {
             });
     }
 
-    function sendFanfactContent(agent) {
+
+    /**
+     * @param agent
+     * @returns {Promise.<TResult>}
+     */
+    function sendNextFanfactHeadline(agent) {
+        let id = getActualFanFactId(agent);
+        id++;
         const parameters = { // Custom parameters to pass with context
-            localid: 1
+            localid: id
         };
-        return fanfact.getFanfact()
+        return fanfact.getFanfact(id)
             .then(res => {
                 agent.context.set('ORFfanfactheadline-followup', 5, parameters);
-                agent.add(`${res['content']}. Möchten Sie mehr dazu wissen?`);
+                agent.add(`${res['headline']}. Möchten Sie mehr dazu wissen?`);
+            })
+            .catch(err => {
+                agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
+            });
+    }
+
+    function sendFanfactContent(agent) {
+        let id = getActualFanFactId(agent);
+        return fanfact.getFanfact(id)
+            .then(res => {
+                agent.add(`${res['content']}. Möchten Sie einen weiteren Fanfact?`);
             })
             .catch(err => {
                 agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
@@ -148,6 +165,14 @@ export function agent(request, response) {
             });
     }
 
+    function getActualFanFactId(agent){
+        let id;
+        // if(agent.getContext('ORFfanfactheadlineyes-followup'))
+        // console.log(agent.context.get('orffanfactheadline-followup'));
+        id = agent.context.get('orffanfactheadline-followup').parameters["localid"];
+        return id
+    }
+
     let intentMap = new Map();
     intentMap.set('Default Welcome Intent', welcome);
     intentMap.set('Default Fallback Intent', fallback);
@@ -159,6 +184,8 @@ export function agent(request, response) {
     intentMap.set('ORF.worldcup.status', sendWorldcupRanking);
     intentMap.set('ORF.fanfact.headline', sendFanfactHeadline);
     intentMap.set('ORF.fanfact.headline.yes', sendFanfactContent);
+    intentMap.set('ORF.fanfact.headline.yes.more', sendNextFanfactHeadline);
+    intentMap.set('ORF.fanfact.headline.more', sendNextFanfactHeadline);
     // intentMap.set('ORF.athlete.weight', sendAthleteWeight);
     // intentMap.set('ORF.athlete.equipment', sendAthleteEquipment);
     agent.handleRequest(intentMap);
