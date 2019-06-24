@@ -49,8 +49,8 @@ export function agent(request, response) {
      * @returns {Promise.<any>}
      */
     function sendAthleteAgeFromContext(agent) {
-        if(agent.contexts.length > 0 && typeof agent.contexts[0].parameters['athletename'] === "string"){
-            agent.parameters['athletename'] = agent.contexts[0].parameters['athletename'];
+        if(agent.context.get("athlete")){
+            agent.parameters['athletename'] = agent.context.get("athlete").parameters['athletename'];
             return sendAthleteAge(agent);
         }
         else{
@@ -89,6 +89,61 @@ export function agent(request, response) {
 
     /**
      * @param agent
+     * @returns {Promise<any>}
+     */
+    function sendAthleteWeight(agent) {
+        return athlete.getWeight(agent.parameters['athletename'])
+            .then(res => {
+                agent.add(`${res['firstname']} ${res['lastname']} ist ${res['weight']} schwer.`);
+            })
+            .catch(err => {
+                agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
+            });
+    }
+    /**
+     * @param agent
+     * @returns {Promise<any>}
+     */
+
+    function sendAthleteEquipment(agent) {
+        return athlete.getEquipment(agent.parameters['athletename'])
+            .then(res => {
+                agent.add(`${res['firstname']} ${res['lastname']} fährt ${res['equipment']}.`);
+            })
+            .catch(err => {
+                agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
+            });
+    }
+    /**
+     * @param agent
+     * @returns {Promise<any>}
+     */
+    function sendAthleteBirthdate(agent) {
+        return athlete.getBirthdate(agent.parameters['athletename'])
+            .then(res => {
+                agent.add(`${res['firstname']} ${res['lastname']} ist am ${res['birthdate']} geboren.`);
+            })
+            .catch(err => {
+                agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
+            });
+    }
+
+    /**
+     * @param agent
+     * @returns {Promise<any>}
+     */
+    function sendAthleteBirthplace(agent) {
+        return athlete.getBirthplace(agent.parameters['athletename'])
+            .then(res => {
+                agent.add(`${res['firstname']} ${res['lastname']} ist in ${res['birthplace']} geboren.`);
+            })
+            .catch(err => {
+                agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
+            });
+    }
+
+    /**
+     * @param agent
      * @returns {Promise.<TResult>}
      */
     function sendFanfactHeadline(agent) {
@@ -98,7 +153,7 @@ export function agent(request, response) {
         return fanfact.getFanfact()
             .then(res => {
                 agent.context.set('ORFfanfactheadline-followup', 5, parameters);
-                agent.add(`${res['headline']}. Möchten Sie mehr dazu wissen?`);
+                agent.add(`${res['headline']}. Möchten Sie mehr dazu wissen oder möchten Sie einen anderen Fakt oder ?`);
             })
             .catch(err => {
                 agent.add("Es ist folgender Fehler aufgetreten: " + err.message);
@@ -158,6 +213,10 @@ export function agent(request, response) {
     function sendWorldcupRanking(agent) {
         return worldcup.getWorldCupStatus(agent.parameters['gender'], agent.parameters['discipline'], agent.parameters['ranking'])
             .then(res => {
+                const parameters = { // Custom parameters to pass with context
+                    athletename: res['athlete']
+                };
+                agent.context.set('athlete', 5, parameters);
                 agent.add(`Im ${res['cup']} ist ${res['athlete']} aus ${res['nation']} mit ${res['points']} Punkten auf Platz ${res['position']} (${res['description']}).`);
             })
             .catch(err => {
@@ -167,9 +226,14 @@ export function agent(request, response) {
 
     function getActualFanFactId(agent){
         let id;
-        // if(agent.getContext('ORFfanfactheadlineyes-followup'))
-        // console.log(agent.context.get('orffanfactheadline-followup'));
-        id = agent.context.get('orffanfactheadline-followup').parameters["localid"];
+        try {
+            id = agent.context.get('orffanfactheadline-followup').parameters["localid"];
+        }
+        catch (e){
+            agent.add("Unbekannter Fehler: " + e);
+            return e;
+        }
+        console.log("id: "+id);
         return id
     }
 
@@ -181,13 +245,16 @@ export function agent(request, response) {
     intentMap.set('ORF.athlete.height', sendAthleteHeight);
     intentMap.set('ORF.athlete.nation', sendAthleteNation);
     intentMap.set('ORF.athlete.nation.context', sendAthleteNationFromContext);
+    intentMap.set('ORF.athlete.weight', sendAthleteWeight);
+    intentMap.set('ORF.athlete.equipment', sendAthleteEquipment);
+    intentMap.set('ORF.athlete.birthplace', sendAthleteBirthplace);
+    intentMap.set('ORF.athlete.birthplace', sendAthleteBirthdate);
     intentMap.set('ORF.worldcup.status', sendWorldcupRanking);
     intentMap.set('ORF.fanfact.headline', sendFanfactHeadline);
     intentMap.set('ORF.fanfact.headline.yes', sendFanfactContent);
     intentMap.set('ORF.fanfact.headline.yes.more', sendNextFanfactHeadline);
     intentMap.set('ORF.fanfact.headline.more', sendNextFanfactHeadline);
-    // intentMap.set('ORF.athlete.weight', sendAthleteWeight);
-    // intentMap.set('ORF.athlete.equipment', sendAthleteEquipment);
+
     agent.handleRequest(intentMap);
     return agent;
 }

@@ -51,6 +51,90 @@ export function getHeight(name) {
  * @param name
  * @returns {Promise<any>}
  */
+export function getWeight(name) {
+    return new Promise((resolve, reject) => {
+        getAthleteDataByName(name)
+            .then((res) => {
+                resolve({
+                        weight: res.data['Weight'],
+                        firstname: capitalizeFirstLetter(getFirstName(name)),
+                        lastname: capitalizeFirstLetter(getLastName(name))
+                    }
+                );
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+}
+
+/**
+ * @param name
+ * @returns {Promise<any>}
+ */
+export function getEquipment(name) {
+    return new Promise((resolve, reject) => {
+        getAthleteDataByName(name)
+            .then((res) => {
+                resolve({
+                        equipment: res.data['Equipment'],
+                        firstname: capitalizeFirstLetter(getFirstName(name)),
+                        lastname: capitalizeFirstLetter(getLastName(name))
+                    }
+                );
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+}
+
+/**
+ * @param name
+ * @returns {Promise<any>}
+ */
+export function getBirthplace(name) {
+    return new Promise((resolve, reject) => {
+        getAthleteDataByName(name)
+            .then((res) => {
+                resolve({
+                        birthplace: res.data['BirthPlace'],
+                        firstname: capitalizeFirstLetter(getFirstName(name)),
+                        lastname: capitalizeFirstLetter(getLastName(name))
+                    }
+                );
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+}
+
+/**
+ * @param name
+ * @returns {Promise<any>}
+ */
+export function getBirthdate(name) {
+    return new Promise((resolve, reject) => {
+        getAthleteDataByName(name)
+            .then((res) => {
+                resolve({
+                        birthdate: res.data['BirthDate'],
+                        firstname: capitalizeFirstLetter(getFirstName(name)),
+                        lastname: capitalizeFirstLetter(getLastName(name))
+                    }
+                );
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+}
+
+/**
+ * @param name
+ * @returns {Promise<any>}
+ */
 export function getNation(name) {
   return new Promise((resolve, reject) => {
     getAthleteDataByName(name)

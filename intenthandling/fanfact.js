@@ -11,8 +11,6 @@ export function getFanfact(id = 0) {
     return new Promise((resolve, reject) => {
         axios.get(url + '/fanfacts')
             .then((res) => {
-            console.log(res.data.length);
-            console.log("id: " +id);
                 if(id >= res.data.length){
                     reject(new Error("Leider haben wir nicht mehr Fan-Fakten"));
                 }
