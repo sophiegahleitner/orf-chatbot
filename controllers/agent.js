@@ -36,7 +36,7 @@ export function agent(request, response) {
      * @returns {Promise<any>}
      */
     function sendAthleteAge(agent) {
-        return athlete.getAge(agent.parameters['athletename'])
+        return athlete.getAge(agent.parameters['athletename']['person']['name'])
             .then(res => {
                 agent.add(`${res['firstname']} ${res['lastname']} ist ${res['age']} Jahre alt.`);
             })
@@ -65,7 +65,7 @@ export function agent(request, response) {
      */
     function sendAthleteNationFromContext(agent) {
         if(agent.context.get("athlete")){
-            agent.parameters['athletename'] = agent.context.get("athlete").parameters['athletename'];
+            agent.parameters['athletename']['person']['name'] = agent.context.get("athlete").parameters['athletename']['person']['name'];
             return sendAthleteNation(agent);
         }
         else{
@@ -78,7 +78,7 @@ export function agent(request, response) {
      * @returns {Promise<any>}
      */
     function sendAthleteHeight(agent) {
-        return athlete.getHeight(agent.parameters['athletename'])
+        return athlete.getHeight(agent.parameters['athletename']['person']['name'])
             .then(res => {
                 agent.add(`${res['firstname']} ${res['lastname']} ist ${res['height']} m groß.`);
             })
@@ -92,7 +92,7 @@ export function agent(request, response) {
      */
     function sendAthleteHeightFromContext(agent) {
         if(agent.context.get("athlete")){
-            agent.parameters['athletename'] = agent.context.get("athlete").parameters['athletename'];
+            agent.parameters['athletename']['person']['name'] = agent.context.get("athlete").parameters['athletename']['person']['name'];
             return sendAthleteHeight(agent);
         }
         else{
@@ -105,7 +105,7 @@ export function agent(request, response) {
      * @returns {Promise<any>}
      */
     function sendAthleteWeight(agent) {
-        return athlete.getWeight(agent.parameters['athletename'])
+        return athlete.getWeight(agent.parameters['athletename']['person']['name'])
             .then(res => {
                 agent.add(`${res['firstname']} ${res['lastname']} ist ${res['weight']} Kilogramm schwer.`);
             })
@@ -120,7 +120,7 @@ export function agent(request, response) {
      */
     function sendAthleteWeightFromContext(agent) {
         if(agent.context.get("athlete")){
-            agent.parameters['athletename'] = agent.context.get("athlete").parameters['athletename'];
+            agent.parameters['athletename']['person']['name'] = agent.context.get("athlete").parameters['athletename']['person']['name'];
             return sendAthleteWeight(agent);
         }
         else{
@@ -133,7 +133,7 @@ export function agent(request, response) {
      */
 
     function sendAthleteEquipment(agent) {
-        return athlete.getEquipment(agent.parameters['athletename'])
+        return athlete.getEquipment(agent.parameters['athletename']['person']['name'])
             .then(res => {
                 agent.add(`${res['firstname']} ${res['lastname']} fährt ${res['equipment']}.`);
             })
@@ -147,7 +147,7 @@ export function agent(request, response) {
      */
     function sendAthleteEquipmentFromContext(agent) {
         if(agent.context.get("athlete")){
-            agent.parameters['athletename'] = agent.context.get("athlete").parameters['athletename'];
+            agent.parameters['athletename']['person']['name'] = agent.context.get("athlete").parameters['athletename']['person']['name'];
             return sendAthleteEquipment(agent);
         }
         else{
@@ -159,7 +159,7 @@ export function agent(request, response) {
      * @returns {Promise<any>}
      */
     function sendAthleteBirthdate(agent) {
-        return athlete.getBirthdate(agent.parameters['athletename'])
+        return athlete.getBirthdate(agent.parameters['athletename']['person']['name'])
             .then(res => {
                 agent.add(`${res['firstname']} ${res['lastname']} ist am ${res['birthdate']} geboren.`);
             })
@@ -173,7 +173,7 @@ export function agent(request, response) {
      */
     function sendAthleteBirthdateFromContext(agent) {
         if(agent.context.get("athlete")){
-            agent.parameters['athletename'] = agent.context.get("athlete").parameters['athletename'];
+            agent.parameters['athletename']['person']['name'] = agent.context.get("athlete").parameters['athletename']['person']['name'];
             return sendAthleteBirthdate(agent);
         }
         else{
@@ -186,7 +186,7 @@ export function agent(request, response) {
      * @returns {Promise<any>}
      */
     function sendAthleteBirthplace(agent) {
-        return athlete.getBirthplace(agent.parameters['athletename'])
+        return athlete.getBirthplace(agent.parameters['athletename']['person']['name'])
             .then(res => {
                 agent.add(`${res['firstname']} ${res['lastname']} ist in ${res['birthplace']} geboren.`);
             })
@@ -196,7 +196,7 @@ export function agent(request, response) {
     }
     function sendAthleteBirthplaceFromContext(agent) {
         if(agent.context.get("athlete")){
-            agent.parameters['athletename'] = agent.context.get("athlete").parameters['athletename'];
+            agent.parameters['athletename']['person']['name'] = agent.context.get("athlete").parameters['athletename']['person']['name'];
             return sendAthleteBirthplace(agent);
         }
         else{
@@ -258,7 +258,7 @@ export function agent(request, response) {
      * @returns {Promise<any>}
      */
     function sendAthleteNation(agent) {
-        return athlete.getNation(agent.parameters['athletename'])
+        return athlete.getNation(agent.parameters['athletename']['person']['name']['person']['name'])
             .then(res => {
                 agent.add(`${res['firstname']} ${res['lastname']} ist von ${res['nation']}.`);
             })
@@ -297,7 +297,7 @@ export function agent(request, response) {
         return id
     }
     function setParamFromContextParam(agent){
-        agent.parameters['athletename'] = agent.context.get("athlete").parameters['athletename'];
+        agent.parameters['athletename']['person']['name'] = agent.context.get("athlete").parameters['athletename']['person']['name'];
     }
 
     let intentMap = new Map();
