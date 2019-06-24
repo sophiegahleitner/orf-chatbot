@@ -48,7 +48,7 @@ export function agent(request, response) {
      * @returns {Promise.<any>}
      */
     function sendAthleteAgeFromContext(agent) {
-        if(agent.contexts.length > 0 && agent.contexts[0].parameters['athletename'] === "string"){
+        if(agent.contexts.length > 0 && typeof agent.contexts[0].parameters['athletename'] === "string"){
             agent.parameters['athletename'] = agent.contexts[0].parameters['athletename'];
             return sendAthleteAge(agent);
         }
@@ -62,7 +62,9 @@ export function agent(request, response) {
      * @returns {Promise.<any>}
      */
     function sendAthleteNationFromContext(agent) {
-        if(agent.contexts.length > 0 && agent.contexts[0].parameters['athletename'] === "string"){
+        console.log(agent);
+        console.log(agent.contexts[0]);
+        if(agent.contexts.length > 0 && typeof agent.contexts[0].parameters['athletename'] === "string"){
             agent.parameters['athletename'] = agent.contexts[0].parameters['athletename'];
             return sendAthleteNation(agent);
         }
