@@ -27,8 +27,8 @@ export function agent(request, response) {
 
     function fallback(agent) {
         agent.add(`Ich kann das nicht verstehen. Sie können beispielsweise nach dem Alter einer Person fragen oder den Zwischenständen in Weltcups fragen.`);
-        agent.add('Leider habe ich deine Frage nicht verstanden. Du kannst mich gerne nach dem derzeitigen Stand im Weltcup fragen.');
-        agent.add('Leider kann ich deine Frage nicht beantworten. Du kannst mich gerne nach dem derzeitigen Stand im Weltcup fragen.');
+        agent.add('Leider habe ich deine Frage nicht verstanden. Sie können mich gerne nach dem derzeitigen Stand im Weltcup fragen.');
+        agent.add('Leider kann ich deine Frage nicht beantworten. Sie können mich gerne nach dem derzeitigen Stand im Weltcup fragen.');
     }
 
     /**
